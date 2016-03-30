@@ -1,7 +1,5 @@
 import random
 
-import matplotlib.pyplot as plt
-
 HEADS = 'HEADS'
 TAILS = 'TAILS'
 EXPECTED_FLIPS = [HEADS, TAILS] * 5
@@ -15,25 +13,21 @@ class Coin:
         return random.choice(self.sides)
 
 
-def run_trial():
+def run_trial() -> int:
     coin = Coin()
-    num_flips = 0
-    actual_flips = []
-    while True:
-        for flip in range(len(EXPECTED_FLIPS)):
-            actual_flips.append(coin.flip())
-            num_flips += 1
-        if actual_flips == EXPECTED_FLIPS:
-            return num_flips
-        actual_flips = []
+    current_flips = []
+    number_flips = 0
+    while current_flips != EXPECTED_FLIPS:
+        number_flips += 1
+        current_flips.append(coin.flip())
+        if current_flips != EXPECTED_FLIPS[:len(current_flips)]:
+            current_flips = []
+    return number_flips
 
 
-def simulation(num_trials: int):
-    result = []
-    for trial in range(num_trials):
-        result.append(run_trial())
-    plt.plot(result)
-    plt.show()
+def run(num_trials: int) -> list:
+    return [run_trial() for _ in range(num_trials)]
 
 
-simulation(100000)
+random.seed(100000)  # 100000 subscribers
+result = run(1024)  # 1/1024 is the chance
